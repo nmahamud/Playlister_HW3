@@ -116,7 +116,7 @@ export const useGlobalStore = () => {
         async function asyncChangeListName(id) {
             let response = await api.getPlaylistById(id);
             if (response.data.success) {
-                let playlist = response.data.playist;
+                let playlist = response.data.playlist;
                 playlist.name = newName;
                 async function updateList(playlist) {
                     response = await api.updatePlaylistById(playlist._id, playlist);
@@ -186,6 +186,22 @@ export const useGlobalStore = () => {
         }
         asyncSetCurrentList(id);
     }
+
+    store.createNewList = function () {
+        async function asyncCreateNewList() {
+            let newList = {name: "Untitled-"+store.newListCounter, songs:[]};
+            let playlist = await api.createPlaylist(newList);
+            if (playlist.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.CREATE_NEW_LIST,
+                    payload: playlist.data.playlist
+                });
+                store.history.push("/playlist/"+ playlist.data.playlist._id)
+            }
+        }
+        asyncCreateNewList();
+    }
+
     store.getPlaylistSize = function() {
         return store.currentList.songs.length;
     }
