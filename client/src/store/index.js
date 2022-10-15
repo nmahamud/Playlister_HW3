@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
-import api from '../api'
+import api, { getAllPlaylists, getPlaylistById } from '../api'
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -18,6 +18,7 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -31,7 +32,8 @@ export const useGlobalStore = () => {
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
-        listNameActive: false
+        listNameActive: false,
+        listFortDeletion: null
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -81,7 +83,8 @@ export const useGlobalStore = () => {
                     idNamePairs: store.idNamePairs,
                     currentList: null,
                     newListCounter: store.newListCounter,
-                    listNameActive: false
+                    listNameActive: false,
+                    listForDeletion: payload
                 });
             }
             // UPDATE A LIST
@@ -196,10 +199,42 @@ export const useGlobalStore = () => {
                     type: GlobalStoreActionType.CREATE_NEW_LIST,
                     payload: playlist.data.playlist
                 });
-                store.history.push("/playlist/"+ playlist.data.playlist._id)
+                store.history.push("/playlist/"+ playlist.data.playlist._id);
             }
         }
         asyncCreateNewList();
+    }
+
+    store.markDeleteList = function (id) {
+        async function asyncMarkDeleteList() {
+            let response = await api.getPlaylistById(id);
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+                storeReducer({
+                    type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                    payload: playlist
+                })
+                // store.history.push("/playlist/"+playlist._id);
+                store.showDeleteListModal();
+            }
+        }
+        asyncMarkDeleteList();
+    }
+
+    store.deleteList = function (id) {
+        async function asyncDeleteList() {
+            let response = await getAllPlaylists();
+        }
+    }
+
+    store.showDeleteListModal = function () {
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.add("is-visible");
+    }
+    // THIS FUNCTION IS FOR HIDING THE MODAL
+    store.hideDeleteListModal = function () {
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.remove("is-visible");
     }
 
     store.getPlaylistSize = function() {
