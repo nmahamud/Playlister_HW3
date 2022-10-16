@@ -187,8 +187,9 @@ input {
   cursor: default;
   border-width: 5px;
   border-radius: 10px;
-  border-style: groove;
   box-shadow: 5px 10px #888888;
+  border-color: black;
+  border-style: solid;
 }
 
 .modal-dialog > * {
@@ -204,7 +205,10 @@ input {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: dotted;
+  font-size:32pt;
+  font-weight: bold;
+  background-color: #669966;
+  color:white;
 }
 
 .modal-header,
