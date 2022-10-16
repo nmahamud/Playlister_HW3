@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
-import api, { getAllPlaylists, getPlaylistById } from '../api'
+import api, { getAllPlaylists, getPlaylistById, deletePlaylistById } from '../api'
+// import { deletePlaylistById } from '../../../server/controllers/playlist-controller';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -18,7 +19,8 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION"
+    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+    DELETE_MARKED_LIST: "DELETE_MARKED_LIST"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -33,7 +35,7 @@ export const useGlobalStore = () => {
         currentList: null,
         newListCounter: 0,
         listNameActive: false,
-        listFortDeletion: null
+        listForDeletion: null
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -104,6 +106,15 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: true
                 });
+            }
+            case GlobalStoreActionType.DELETE_MARKED_LIST: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: null,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    listForDeletion: null
+                })
             }
             default:
                 return store;
@@ -221,10 +232,18 @@ export const useGlobalStore = () => {
         asyncMarkDeleteList();
     }
 
-    store.deleteList = function (id) {
+    store.deleteList = function () {
         async function asyncDeleteList() {
-            let response = await getAllPlaylists();
+            let response = await deletePlaylistById(store.listForDeletion._id);
+            if (response.data.success) {
+                // let playlist = response.data.playlist;
+                storeReducer({
+                    type: GlobalStoreActionType.DELETE_MARKED_LIST
+                })
+            }
+            store.hideDeleteListModal();
         }
+        asyncDeleteList();
     }
 
     store.showDeleteListModal = function () {
