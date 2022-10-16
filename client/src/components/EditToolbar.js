@@ -14,7 +14,7 @@ function EditToolbar() {
     let enabledButtonClass = "toolbar-button";
 
     function handleAdd() {
-        store.addNewSong();
+        store.addSongTransaction();
     }
     function handleUndo() {
         store.undo();

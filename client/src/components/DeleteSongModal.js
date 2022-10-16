@@ -1,36 +1,37 @@
-import React, { Component } from 'react';
+import React, { Component, useContext, useEffect } from 'react';
+import { GlobalStoreContext } from '../store';
 
-export default class DeleteSongModal extends Component {
-    render() {
-        const { song, deleteSongCallback, hideDeleteSongModalCallback } = this.props;
+const DeleteSongModal = () => {
+    {
+        const { store } = useContext(GlobalStoreContext);
         let name = "";
-        if (song) {
-            name = song.song.title;
+        if (store.currentList) {
+            name = store.currentList.songs[store.indexDelete];
         }
         return (
             <div 
                 class="modal" 
                 id="delete-song-modal" 
                 data-animation="slideInOutLeft">
-                    <div class="modal-root" id='verify-delete-song-root'>
-                        <div class="modal-north">
+                    <div class="modal-dialog" id='verify-delete-song-root'>
+                        <div class="modal-header">
                             Remove song?
                         </div>
-                        <div class="modal-center">
+                        <div class="dialog-header">
                             <div class="modal-center-content">
-                                Are you sure you wish to permantently remove <b>{name}</b> from the playlist?
+                                Are you sure you wish to remove <b>{name}</b> from the playlist?
                             </div>
                         </div>
-                        <div class="modal-south">
+                        <div id = "confirm-cancel-container" class="modal-footer">
                             <input type="button" 
                                 id="delete-song-confirm-button" 
-                                class="modal-button" 
-                                onClick={deleteSongCallback}
+                                class="modal-control" 
+                                onClick={store.deleteSongTransaction}
                                 value='Confirm' />
                             <input type="button" 
                                 id="delete-song-cancel-button" 
-                                class="modal-button" 
-                                onClick={hideDeleteSongModalCallback}
+                                class="modal-control" 
+                                onClick={store.hideDeleteSongModal}
                                 value='Cancel' />
                         </div>
                     </div>
@@ -38,3 +39,5 @@ export default class DeleteSongModal extends Component {
         );
     }
 }
+
+export default DeleteSongModal;

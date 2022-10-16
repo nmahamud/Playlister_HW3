@@ -68,6 +68,7 @@ body {
   grid-row: 2 / 3;
   display:grid;
   background-color: var(--swatch-primary);
+  height: 80%;
 }
 
 .toolbar-button {
