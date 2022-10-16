@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
-import api, { getAllPlaylists, getPlaylistById, deletePlaylistById } from '../api'
+import api, { getAllPlaylists, getPlaylistById, deletePlaylistById, editPlaylistById } from '../api'
 // import { deletePlaylistById } from '../../../server/controllers/playlist-controller';
 export const GlobalStoreContext = createContext({});
 /*

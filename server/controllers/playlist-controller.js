@@ -1,3 +1,4 @@
+// const { editPlaylistById } = require('../../client/src/api');
 const Playlist = require('../models/playlist-model')
 /*
     This is our back-end API. It provides all the data services
@@ -95,11 +96,23 @@ deletePlaylistById = async(req, res) => {
         return res.status(200).json({ success: true })
     }).catch(err => console.log(err))
 }
+updatePlaylistById = async(req, res) => {
+    const body = req.body;
+    const playlist = new Playlist(body);
+    await Playlist.updateOne({_id: req.params.id}, {$set: {name: playlist.name}}, function (err) {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+
+        return res.status(200).json({ success: true })
+    }).catch(err => console.log(err))
+}
 
 module.exports = {
     createPlaylist,
     getPlaylists,
     getPlaylistPairs,
     getPlaylistById,
-    deletePlaylistById
+    deletePlaylistById,
+    updatePlaylistById
 }
