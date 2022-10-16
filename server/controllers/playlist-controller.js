@@ -99,7 +99,7 @@ deletePlaylistById = async(req, res) => {
 updatePlaylistById = async(req, res) => {
     const body = req.body;
     const playlist = new Playlist(body);
-    await Playlist.updateOne({_id: req.params.id}, {$set: {name: playlist.name}}, function (err) {
+    await Playlist.updateMany({_id: req.params.id}, {$set: {name: playlist.name, songs: playlist.songs}}, function (err) {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }

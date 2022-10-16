@@ -11,8 +11,11 @@ function EditToolbar() {
     const { store } = useContext(GlobalStoreContext);
     const history = useHistory();
 
-    let enabledButtonClass = "playlister-button";
+    let enabledButtonClass = "toolbar-button";
 
+    function handleAdd() {
+        store.addNewSong();
+    }
     function handleUndo() {
         store.undo();
     }
@@ -35,6 +38,7 @@ function EditToolbar() {
                 disabled={editStatus}
                 value="+"
                 className={enabledButtonClass}
+                onClick={handleAdd}
             />
             <input
                 type="button"

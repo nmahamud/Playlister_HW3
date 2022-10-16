@@ -41,17 +41,14 @@ function ListCard(props) {
         if (newActive) {
             store.setlistNameActive();
         }
+        setText(idNamePair.name);
         setEditActive(newActive);
     }
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let id = event.target.id.substring("list-".length);
-            if (text === "") {
-                store.changeListName(id, idNamePair.name);
-            }
-            else
-                store.changeListName(id, text);
+            store.changeListName(id, text);
             toggleEdit();
         }
     }

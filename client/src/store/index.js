@@ -225,7 +225,7 @@ export const useGlobalStore = () => {
                     type: GlobalStoreActionType.MARK_LIST_FOR_DELETION,
                     payload: playlist
                 })
-                // store.history.push("/playlist/"+playlist._id);
+                store.history.push("/playlist/"+playlist._id);
                 store.showDeleteListModal();
             }
         }
@@ -245,6 +245,37 @@ export const useGlobalStore = () => {
             store.hideDeleteListModal();
         }
         asyncDeleteList();
+    }
+
+    store.addNewSong = function() {
+        async function asyncAddNewSong() {
+            let response = await getPlaylistById(store.currentList._id);
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+                playlist.songs.push({title: "Untitled", artist: "Unknown", youTubeId: 'dQw4w9WgXcQ'});
+                async function updateList(playlist) {
+                    response = await api.updatePlaylistById(playlist._id, playlist);
+                    if (response.data.success) {
+                        async function getListPairs(playlist) {
+                            response = await api.getPlaylistPairs();
+                            if (response.data.success) {
+                                let pairsArray = response.data.idNamePairs;
+                                storeReducer({
+                                    type: GlobalStoreActionType.CHANGE_LIST_NAME,
+                                    payload: {
+                                        idNamePairs: pairsArray,
+                                        playlist: playlist
+                                    }
+                                });
+                            }
+                        }
+                        getListPairs(playlist);
+                    }
+                }
+                updateList(playlist);
+            }
+        }
+        asyncAddNewSong();
     }
 
     store.showDeleteListModal = function () {

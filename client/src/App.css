@@ -70,6 +70,23 @@ body {
   background-color: var(--swatch-primary);
 }
 
+.toolbar-button {
+  font-size:36pt;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  box-shadow: 2px 4px #888888;
+  border-radius: 5px;
+}
+
+.disabled {
+  background-color: lightgray;
+}
+
+.disabled:hover {
+  color: var(--swatch-neutral);
+}
+
 .playlister-button, .playlister-button-disabled {
   font-size:36pt;
   border-width: 0px;
