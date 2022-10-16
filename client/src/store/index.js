@@ -239,7 +239,8 @@ export const useGlobalStore = () => {
                 // let playlist = response.data.playlist;
                 storeReducer({
                     type: GlobalStoreActionType.DELETE_MARKED_LIST
-                })
+                });
+                store.loadIdNamePairs();
             }
             store.hideDeleteListModal();
         }
