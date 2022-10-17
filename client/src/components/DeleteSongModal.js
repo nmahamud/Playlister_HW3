@@ -6,7 +6,8 @@ const DeleteSongModal = () => {
         const { store } = useContext(GlobalStoreContext);
         let name = "";
         if (store.currentList) {
-            name = store.currentList.songs[store.indexDelete];
+            if (store.indexDelete)
+                name = store.currentList.songs[store.indexDelete.index].title;
         }
         return (
             <div 

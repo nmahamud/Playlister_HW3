@@ -7,8 +7,14 @@ function SongCard(props) {
     const { song, index } = props;
     let cardClass = "list-card unselected-list-card";
 
-    function handleRemove() {
+    function handleRemove(event) {
+        event.stopPropagation();
         store.markDeleteSong(index);
+    }
+
+    function handleDoubleClick(event) {
+        event.stopPropagation();
+        store.markEditSong(index);
     }
 
     return (
@@ -16,6 +22,7 @@ function SongCard(props) {
             key={index}
             id={'song-' + index + '-card'}
             className={cardClass}
+            onDoubleClick={handleDoubleClick}
         >
             {index + 1}.
             <a

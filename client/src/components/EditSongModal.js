@@ -1,44 +1,50 @@
-import React, { Component } from 'react';
+import React, { Component, useContext, useEffect } from 'react';
+import { GlobalStoreContext } from '../store';
 
-export default class EditSongModal extends Component {
-    render() {
-        const { song, editSongCallback, hideEditSongModalCallback } = this.props;
+const EditSongModal = () => {
+        const { store } = useContext(GlobalStoreContext);
         let title = "";
         let artist = "";
         let id = "";
-        if (song) {
-            title = song.song.title;
-            artist = song.song.artist;
-            id = song.song.youTubeId;
+        let index = null;
+        if (store.indexEdit)
+            index = store.indexEdit.index;
+        if (store.currentList) {
+            if (store.indexEdit) {
+                title = store.currentList.songs[index].title;
+                artist = store.currentList.songs[index].artist;
+                id = store.currentList.songs[index].youTubeId;
+            }
         }
         return (
             <div 
                 class="modal" 
                 id="edit-song-modal" 
                 data-animation="slideInOutLeft">
-                    <div class="modal-root" id='verify-edit-song-root'>
-                        <div class="modal-north">
+                    <div class="modal-dialog" id='verify-edit-song-root'>
+                        <div class="modal-header">
                             Edit song
                         </div>
-                        <div class="modal-center">
-                            <span id="title-prompt" class="modal-prompt">Title: </span> <input type="text" defaultValue={title} id="title-input" class="modal-textfield" /> 
-                            <span id="artist-prompt" class="modal-prompt">Artist: </span> <input type="text" defaultValue={artist} id="artist-input" class="modal-textfield" />
+                        <div class="dialog-header">
+                            <span id="title-prompt" class="modal-prompt">Title: </span> <input type="text" defaultValue={title} id="title-input" class="modal-textfield" /> <br />
+                            <span id="artist-prompt" class="modal-prompt">Artist: </span> <input type="text" defaultValue={artist} id="artist-input" class="modal-textfield" /><br />
                             <span id="you-tube-id-prompt" class="modal-prompt">You Tube Id: </span> <input type="text" defaultValue={id} id="youtube-input" class="modal-textfield" />
                         </div>
-                        <div class="modal-south">
+                        <div id = "confirm-cancel-container" class="modal-footer">
                             <input type="button" 
                                 id="edit-song-confirm-button" 
-                                class="modal-button" 
-                                onClick={editSongCallback}
+                                class="modal-control" 
+                                onClick={store.editSongTransaction}
                                 value='Confirm' />
                             <input type="button" 
                                 id="edit-song-cancel-button" 
-                                class="modal-button" 
-                                onClick={hideEditSongModalCallback}
+                                class="modal-control" 
+                                onClick={store.hideEditSongModal}
                                 value='Cancel' />
                         </div>
                     </div>
             </div>
         );
     }
-}
+
+export default EditSongModal;
