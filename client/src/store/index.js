@@ -377,12 +377,12 @@ export const useGlobalStore = () => {
                     index: index
                 }
             })
-            let title = document.getElementById("title-input").value;
-            let artist = document.getElementById("artist-input").value;
-            let id = document.getElementById("youtube-input").value;
-            document.getElementById("title-input").setAttribute('value',title);
-            document.getElementById("artist-input").setAttribute('value',artist);
-            document.getElementById("youtube-input").setAttribute('value',id);
+            let title = store.currentList.songs[index].title;
+            let artist = store.currentList.songs[index].artist;
+            let id = store.currentList.songs[index].youTubeId;
+            document.getElementById("title-input").value = title;
+            document.getElementById("artist-input").value = artist;
+            document.getElementById("youtube-input").value = id;
             store.showEditSongModal();
         }
         asyncMarkEditSong();
