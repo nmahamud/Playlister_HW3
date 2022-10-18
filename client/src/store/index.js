@@ -4,6 +4,7 @@ import api, { getAllPlaylists, getPlaylistById, deletePlaylistById, editPlaylist
 import AddSong_Transaction from '../transactions/AddSong_Transaction';
 import DeleteSong_Transaction from '../transactions/DeleteSong_Transaction';
 import EditSong_Transaction from '../transactions/EditSong_Transaction';
+import MoveSong_Transaction from '../transactions/MoveSong_Transaction';
 // import { deletePlaylistById } from '../../../server/controllers/playlist-controller';
 export const GlobalStoreContext = createContext({});
 /*
@@ -446,6 +447,49 @@ export const useGlobalStore = () => {
         asyncEditSong();
     }
 
+    store.moveSong = function (start, end) {
+        async function asyncMoveSong() {
+            let list = store.currentList;
+
+            // WE NEED TO UPDATE THE STATE FOR THE APP
+            if (start < end) {
+                let temp = list.songs[start];
+                for (let i = start; i < end; i++) {
+                    list.songs[i] = list.songs[i + 1];
+                }
+                list.songs[end] = temp;
+            }
+            else if (start > end) {
+                let temp = list.songs[start];
+                for (let i = start; i > end; i--) {
+                    list.songs[i] = list.songs[i - 1];
+                }
+                list.songs[end] = temp;
+            }
+            async function updateList(playlist) {
+                let response = await api.updatePlaylistById(playlist._id, playlist);
+                if (response.data.success) {
+                    async function getListPairs(playlist) {
+                        response = await api.getPlaylistPairs();
+                        if (response.data.success) {
+                            let pairsArray = response.data.idNamePairs;
+                            storeReducer({
+                                type: GlobalStoreActionType.ADD_SONG,
+                                payload: {
+                                    idNamePairs: pairsArray,
+                                    playlist: playlist
+                                }
+                            });
+                        }
+                    }
+                    getListPairs(playlist);
+                }
+            }
+            updateList(store.currentList);   
+        }
+        asyncMoveSong();
+    }
+
     store.showDeleteListModal = function () {
         let modal = document.getElementById("delete-list-modal");
         modal.classList.add("is-visible");
@@ -503,6 +547,11 @@ export const useGlobalStore = () => {
         let artist = document.getElementById("artist-input").value;
         let youTubeId = document.getElementById("youtube-input").value;
         let transaction = new EditSong_Transaction(store, index, store.currentList.songs[index], title, artist, youTubeId);
+        tps.addTransaction(transaction);
+    }
+
+    store.moveSongTransaction = (start, endpoint) => {
+        let transaction = new MoveSong_Transaction(store, start, endpoint);
         tps.addTransaction(transaction);
     }
 
