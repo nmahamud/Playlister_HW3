@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import SongCard from './SongCard.js'
 import { GlobalStoreContext } from '../store'
@@ -11,18 +11,19 @@ import { GlobalStoreContext } from '../store'
 function PlaylistCards() {
     const { store } = useContext(GlobalStoreContext);
     store.history = useHistory();
-
     return (
         <div id="playlist-cards">
         {
-            store.currentList.songs.map((song, index) => (
-                <SongCard
-                    id={'playlist-song-' + (index)}
-                    key={'playlist-song-' + (index)}
-                    index={index}
-                    song={song}
-                />
-            ))
+            store.currentList != null ? ( 
+                store.currentList.songs.map((song, index) => (
+                    <SongCard
+                        id={'playlist-song-' + (index)}
+                        key={'playlist-song-' + (index)}
+                        index={index}
+                        song={song}
+                    />
+                ))
+            ):""
         }
         </div>
     )
