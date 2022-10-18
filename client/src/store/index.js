@@ -243,6 +243,7 @@ export const useGlobalStore = () => {
             }
         }
         asyncSetCurrentList(id);
+        tps.clearAllTransactions();
     }
 
     store.createNewList = function () {
@@ -551,8 +552,10 @@ export const useGlobalStore = () => {
     }
 
     store.moveSongTransaction = (start, endpoint) => {
-        let transaction = new MoveSong_Transaction(store, start, endpoint);
-        tps.addTransaction(transaction);
+        if (start != endpoint) {
+            let transaction = new MoveSong_Transaction(store, start, endpoint);
+            tps.addTransaction(transaction);
+        }
     }
 
     // THIS FUNCTION ENABLES THE PROCESS OF EDITING A LIST NAME
