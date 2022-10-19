@@ -207,6 +207,7 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
+        tps.clearAllTransactions();
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
@@ -491,6 +492,30 @@ export const useGlobalStore = () => {
         asyncMoveSong();
     }
 
+
+    // const canAddList = store.currentList === null;
+    // const canAddSongOrCloseList = store.currentList !== null;
+    // const canUndo = tps.hasTransactionToUndo();
+    // const canRedo = tps.hasTransactionToRedo();
+    store.canAddList = function () {
+        return store.currentList === null;
+    }
+    store.canAddSongOrCloseList = function () {
+        return store.currentList !== null;
+    }
+    store.canUndo = function () {
+        return tps.hasTransactionToUndo();
+    }
+    store.canRedo = function () {
+        return tps.hasTransactionToRedo();
+    }
+
+    // store.toggleButtons = function () {
+    //     if (store.canAddList()) {
+    //         document.getElementById("")
+    //     }
+    // }
+
     store.showDeleteListModal = function () {
         let modal = document.getElementById("delete-list-modal");
         modal.classList.add("is-visible");
@@ -525,10 +550,12 @@ export const useGlobalStore = () => {
         return store.currentList.songs.length;
     }
     store.undo = function () {
-        tps.undoTransaction();
+        if (tps.hasTransactionToUndo())
+            tps.undoTransaction();
     }
     store.redo = function () {
-        tps.doTransaction();
+        if (tps.hasTransactionToRedo())
+            tps.doTransaction();
     }
 
     store.addSongTransaction = () => {

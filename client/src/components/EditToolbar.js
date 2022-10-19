@@ -27,9 +27,15 @@ function EditToolbar() {
         store.closeCurrentList();
     }
     let editStatus = false;
-    if (store.isListNameEditActive) {
+    if (!store.canAddSongOrCloseList()) {
         editStatus = true;
     }
+    let canUndo = false;
+    if (!store.canUndo())
+        canUndo = true;
+    let canRedo = false;
+    if (!store.canRedo())
+        canRedo = true;
     return (
         <span id="edit-toolbar">
             <input
@@ -43,7 +49,7 @@ function EditToolbar() {
             <input
                 type="button"
                 id='undo-button'
-                disabled={editStatus}
+                disabled={canUndo}
                 value="⟲"
                 className={enabledButtonClass}
                 onClick={handleUndo}
@@ -51,7 +57,7 @@ function EditToolbar() {
             <input
                 type="button"
                 id='redo-button'
-                disabled={editStatus}
+                disabled={canRedo}
                 value="⟳"
                 className={enabledButtonClass}
                 onClick={handleRedo}
