@@ -55,7 +55,7 @@ export const useGlobalStore = () => {
             case GlobalStoreActionType.CHANGE_LIST_NAME: {
                 return setStore({
                     idNamePairs: payload.idNamePairs,
-                    currentList: payload.playlist,
+                    currentList: null,
                     newListCounter: store.newListCounter,
                     listNameActive: false
                 });
@@ -497,8 +497,8 @@ export const useGlobalStore = () => {
     // const canAddSongOrCloseList = store.currentList !== null;
     // const canUndo = tps.hasTransactionToUndo();
     // const canRedo = tps.hasTransactionToRedo();
-    store.canAddList = function () {
-        return store.currentList === null;
+    store.canAddList = function () { 
+        return (store.currentList === null) && (store.listNameActive === false);
     }
     store.canAddSongOrCloseList = function () {
         return store.currentList !== null;
